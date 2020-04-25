@@ -6,8 +6,8 @@
 
 test -e $HOME/log || mkdir $HOME/log
 
-LOG_PATH=$HOME/log/ns_stats.log
-KEY_PATH=$HOME/secrets/key.json
+LOG_PATH=/var/log/ns_stats.log
+KEY_PATH=$HOME/store/key.json
 
 LINE_TOKEN_ME="reQphxR0nOG8hqNnoQ85Rxk85Uv9EPvuKD2hguShVtI"
 LINE_TOKEN_GROUP="mBZsRyVzb2I9UmSuk5ctLX6VIF9V1PqJsjxeaQMXcnZ"
@@ -84,25 +84,25 @@ get_namespace_info() {
     totalCPU=$(echo $NS_INFO | jq '.totalCPU' | tr -d '\"')
     usedCPU=$(echo $NS_INFO | jq '.usedCPU' | tr -d '\"')
 
-    limitCPU_Rate=`echo "scale=2; $limitCPU / $totalCPU" | bc -l`
-    requestCPU_Rate=`echo "scale=2; $requestCPU / $totalCPU" | bc -l`
+    limitCpuRate=`echo "scale=2; $limitCPU / $totalCPU" | bc -l`
+    requestCpuRate=`echo "scale=2; $requestCPU / $totalCPU" | bc -l`
 
     limitMemory=$(echo $NS_INFO | jq '.limitMemory' | tr -d '\"' | tr -d '.00')
     requestMemory=$(echo $NS_INFO | jq '.requestMemory' | tr -d '\"' | tr -d '.00')
     totalMemory=$(echo $NS_INFO | jq '.totalMemory' | tr -d '\"')
 
-    limitMemory_Rate=`echo "scale=2; $limitMemory / $totalMemory" | bc -l`
-    requestMemory_Rate=`echo "scale=2; $requestMemory / $totalMemory" | bc -l`
+    limitMemoryRate=`echo "scale=2; $limitMemory / $totalMemory" | bc -l`
+    requestMemoryRate=`echo "scale=2; $requestMemory / $totalMemory" | bc -l`
 
     usedPod=$(echo $NS_INFO | jq '.usedPod' | tr -d '\"' | tr -d '.00')
     totalPod=$(echo $NS_INFO | jq '.totalPod' | tr -d '\"')
 
     MSG="%0D%0A\
     [$DATA_CENTER-$CLUSTER-$NAMESPACE]%0D%0A\
-    cpu_lim: $limitCPU/$totalCPU, $limitCPU_Rate%0D%0A\
-    cpu_req: $requestCPU/$totalCPU, $requestCPU_Rate%0D%0A\
-    mem_lim: $limitMemory/$totalMemory, $limitMemory_Rate%0D%0A\
-    mem_req: $requestMemory/$totalMemory, $requestMemory_Rate%0D%0A\
+    cpu_lim: $limitCPU/$totalCPU, $limitCpuRate%0D%0A\
+    cpu_req: $requestCPU/$totalCPU, $requestCpuRate%0D%0A\
+    mem_lim: $limitMemory/$totalMemory, $limitMemoryRate%0D%0A\
+    mem_req: $requestMemory/$totalMemory, $requestMemoryRate%0D%0A\
     pod: $usedPod/$totalPod\
     "
 }
@@ -137,7 +137,7 @@ get_namespace_info
 accumulate_msg
 
 # Send LINE notification
-curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MSG_NOTIFY" -X POST https://notify-api.line.me/api/notify
+curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MSG_NOTIFY" -X POST https://notify-api.line.me/api/notify; echo
 
 # To separate from the next log
 echo "\n" >> $LOG_PATH

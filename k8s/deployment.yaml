@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-routines
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: cronjob
+  template:
+    metadata:
+      labels:
+        component: cronjob
+    spec:
+      containers:
+        - name: routines
+          image: ensaas/k8s-routines:v0.1.0
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 20m
+              memory: 64Mi
+              ephemeral-storage: 128Mi
+            requests:
+              cpu: 20m
+              memory: 64Mi
