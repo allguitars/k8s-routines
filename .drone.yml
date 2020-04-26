@@ -15,7 +15,7 @@ steps:
       - 0.3.0
     environment:
       TOKEN:
-        from_secret: one_of_the_tokens
+        from_secret: ensaas_password
     build_args_from_env:
       - TOKEN
 
