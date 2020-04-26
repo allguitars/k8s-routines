@@ -3,23 +3,36 @@ type: docker
 name: default
 
 steps:
-- name: docker
-  image: plugins/docker
-  settings:
-    repo: ensaas/k8s-routines
-    username: ensaas
-    password:
-      from_secret: docker_password
-    tags:
-      - latest
-      - 0.3.0
-- name: deploy
-  image: ensaas/kubectl-alpine
+# - name: docker
+#   image: plugins/docker
+#   settings:
+#     repo: ensaas/k8s-routines
+#     username: ensaas
+#     password:
+#       from_secret: docker_password
+#     tags:
+#       - latest
+#       - 0.3.0
+
+# - name: deploy
+#   image: ensaas/kubectl-alpine
+#   commands:
+#   - kubectl config use-context $CURRENT_CONTEXT
+#   - kubectl config set-context --current --namespace=$NAMESPACE
+#   - kubectl get deploy | grep k8s-routines && kubectl delete -f k8s/
+#   - kubectl apply -f k8s/
+#   environment:
+#     CURRENT_CONTEXT: 6e0745d0-5c25-11ea-b898-fa99721571bc-eks004
+#     NAMESPACE: devspace
+    # username:
+    #   from_secret: ensaas_username
+    # password:
+    #   from_secret: ensaas_password
+
+- name: test
+  image: alpine
   commands:
-  - kubectl config use-context $CURRENT_CONTEXT
-  - kubectl config set-context --current --namespace=$NAMESPACE
-  - kubectl get deploy | grep k8s-routines && kubectl delete -f k8s/
-  - kubectl apply -f k8s/
+  - echo $${password}
   environment:
-    CURRENT_CONTEXT: 6e0745d0-5c25-11ea-b898-fa99721571bc-eks004
-    NAMESPACE: devspace
+    password:
+      from_secret: ensaas_password
