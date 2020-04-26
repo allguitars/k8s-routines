@@ -18,7 +18,9 @@ steps:
     # - sed 's/certificate-authority/certificate-authority-data/g' config | sed 's/client-certificate/client-certificate-data/g' | sed 's/client-key/client-key-data/g' > config
     # # - pwd # /drone/src
     # - kubectl get all --kubeconfig=./config
-    - docker login -u $USERNAME -p $PASSWORD
+    - echo $CONFIG >> config
+    - cat config
+    - ls -ls
   environment:
     SERVER:
       from_secret: SERVER
@@ -42,3 +44,5 @@ steps:
       from_secret: docker_username
     PASSWORD:
       from_secret: docker_password
+    CONFIG:
+      from_secret: config
