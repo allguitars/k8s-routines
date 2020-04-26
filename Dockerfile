@@ -1,4 +1,4 @@
-FROM alpine
+FROM ensaas/kubectl-alpine
 
 # Script for adding crontab job inside the container instead of copying root over
 # This is to avoid Windows line break issue
@@ -19,9 +19,8 @@ COPY ./namespace_stats_regular.sh ./
 # Set permission
 RUN set -ex; chmod 0744 *
 
-# Install tools
+# Install tools (curl already installed in ensaas/kubectl)
 RUN set -ex; \
-  apk add curl; \
   apk add jq; \
   apk add bc
 
