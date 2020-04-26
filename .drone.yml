@@ -6,7 +6,8 @@ steps:
 - name: greeting
   image: alpine
   commands:
-  - echo $TALK
+  - echo $TALK >> /test.log
+  - cat /test.log
   environment:
     TALK:
       from_secret: mysecret
