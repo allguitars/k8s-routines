@@ -5,6 +5,9 @@ name: default
 steps:
 - name: docker
   image: plugins/docker
+  environment:
+    TOKEN:
+      from_secret: ensaas_password
   settings:
     repo: ensaas/k8s-routines
     username: ensaas
@@ -13,9 +16,6 @@ steps:
     tags:
       - latest
       - 0.3.0
-    environment:
-      TOKEN:
-        from_secret: ensaas_password
     build_args_from_env:
       - TOKEN
 

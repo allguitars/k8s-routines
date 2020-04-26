@@ -1,6 +1,5 @@
 FROM ensaas/kubectl-alpine
 
-ARG TOKEN
 ENV PW $TOKEN
 
 # Script for adding crontab job inside the container instead of copying root over
