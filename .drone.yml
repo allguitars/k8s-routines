@@ -18,9 +18,8 @@ steps:
   # - sed 's/certificate-authority/certificate-authority-data/g' config | sed 's/client-certificate/client-certificate-data/g' | sed 's/client-key/client-key-data/g' > config
   # # - pwd # /drone/src
   # - kubectl get all --kubeconfig=./config
-  - echo $${CLUSTER}
+  - echo $PASSWORD
   environment:
-    WORDS: good words
     SERVER:
       from_secret: SERVER
     CERT_AUTH:
@@ -39,3 +38,5 @@ steps:
       from_secret: CLIENT_KEY
     CURRENT:
       from_secret: CURRENT
+    PASSWORD:
+      from_secret: password
