@@ -3,11 +3,13 @@ type: docker
 name: default
 
 steps:
-- name: build
-  image: docker
-  commands:
-    - echo $PASSWORD | docker login --username $USER --password-stdin
-  environment:
-    USER: ensaas
-    PASSWORD:
+- name: docker
+  image: plugins/docker
+  settings:
+    repo: ensaas/k8s-routines
+    username: ensaas
+    password:
       from_secret: docker_password
+    tags:
+      - latest
+      - 0.2.0
