@@ -18,7 +18,7 @@ steps:
   commands:
   - kubectl config use-context $CURRENT_CONTEXT
   - kubectl config set-context --current --namespace=$NAMESPACE
-  - [[ $(kubectl get deploy | grep k8s-routines) ]] && kubectl delete -f k8s/
+  - kubectl get deploy | grep k8s-routines && kubectl delete -f k8s/
   - kubectl apply -f k8s/
   environment:
     CURRENT_CONTEXT: 6e0745d0-5c25-11ea-b898-fa99721571bc-eks004
