@@ -14,10 +14,11 @@ steps:
 #       - latest
 #       - 0.2.5
 - name: deploy
-  image: ensaas/k8s-routines
+  image: ensaas/kubectl-alpine
   commands:
-  - kubectl config use-context ${CURRENT_CONTEXT}
-  - kubectl config apply -f k8s/ --namespace=${NAMESPACE}
+  - kubectl config use-context $CURRENT_CONTEXT
+  - kubectl config view
+  # - kubectl config apply -f k8s/ --namespace=$NAMESPACE
   environment:
     CURRENT_CONTEXT: 6e0745d0-5c25-11ea-b898-fa99721571bc-eks004
     NAMESPACE: devspace
