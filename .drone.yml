@@ -18,7 +18,6 @@ steps:
   commands:
   - kubectl config use-context $CURRENT_CONTEXT
   - kubectl config set-context --current --namespace=$NAMESPACE
-  # If the deploy exits, delete it first and then apply.
   - [[ $(kubectl get deploy | grep k8s-routines) ]] && kubectl delete -f k8s/
   - kubectl apply -f k8s/
   environment:
