@@ -6,18 +6,19 @@ steps:
 - name: kubectl
   image: alpine
   commands:
-  - apk add curl
-  - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
-  - chmod +x ./kubectl
-  - mv ./kubectl /usr/local/bin/kubectl
-  - kubectl version --client
-  - kubectl config --kubeconfig=config set-cluster $CLUSTER --server=$SERVER --certificate-authority=$CERT_AUTH
-  - kubectl config --kubeconfig=config set-credentials $USER --client-certificate=$CLIENT_CERT --client-key=$CLIENT_KEY
-  - kubectl config --kubeconfig=config set-context $CONTEXT_NAME --cluster=$CLUSTER --namespace=$NAMESPACE --user=$USER
-  - kubectl config --kubeconfig=config use-context $CURRENT 
-  - sed 's/certificate-authority/certificate-authority-data/g' config | sed 's/client-certificate/client-certificate-data/g' | sed 's/client-key/client-key-data/g' > config
-  # - pwd # /drone/src
-  - kubectl get all --kubeconfig=./config
+  # - apk add curl
+  # - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  # - chmod +x ./kubectl
+  # - mv ./kubectl /usr/local/bin/kubectl
+  # - kubectl version --client
+  # - kubectl config --kubeconfig=config set-cluster $CLUSTER --server=$SERVER --certificate-authority=$CERT_AUTH
+  # - kubectl config --kubeconfig=config set-credentials $USER --client-certificate=$CLIENT_CERT --client-key=$CLIENT_KEY
+  # - kubectl config --kubeconfig=config set-context $CONTEXT_NAME --cluster=$CLUSTER --namespace=$NAMESPACE --user=$USER
+  # - kubectl config --kubeconfig=config use-context $CURRENT 
+  # - sed 's/certificate-authority/certificate-authority-data/g' config | sed 's/client-certificate/client-certificate-data/g' | sed 's/client-key/client-key-data/g' > config
+  # # - pwd # /drone/src
+  # - kubectl get all --kubeconfig=./config
+  - echo $secenv
   environment:
     SERVER:
       from_secret: SERVER
@@ -37,3 +38,5 @@ steps:
       from_secret: CLIENT_KEY
     CURRENT:
       from_secret: CURRENT
+    secenv:
+      from_secret: mysecret
