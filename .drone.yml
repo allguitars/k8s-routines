@@ -16,8 +16,8 @@ steps:
     # - kubectl config --kubeconfig=config set-context $CONTEXT_NAME --cluster=$CLUSTER --namespace=$NAMESPACE --user=$USER
     # - kubectl config --kubeconfig=config use-context $CURRENT 
     # - sed 's/certificate-authority/certificate-authority-data/g' config | sed 's/client-certificate/client-certificate-data/g' | sed 's/client-key/client-key-data/g' > config
-    - echo $CONFIG >> config
-    - kubectl get all --kubeconfig=config
+    - echo $CONFIG >> eks004
+    - kubectl get all --kubeconfig=eks004
     # - cat config
     # - ls -l
     # - pwd # /drone/src
