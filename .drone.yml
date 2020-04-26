@@ -17,7 +17,8 @@ steps:
   image: ensaas/kubectl-alpine
   commands:
   - kubectl config use-context $CURRENT_CONTEXT
-  - kubectl apply -f k8s/ --namespace=$NAMESPACE
+  - kubectl config set-context --current --namespace=$NAMESPACE
+  - kubectl delete -f k8s/; kubectl apply -f k8s/
   environment:
     CURRENT_CONTEXT: 6e0745d0-5c25-11ea-b898-fa99721571bc-eks004
     NAMESPACE: devspace
