@@ -3,15 +3,17 @@ type: docker
 name: default
 
 steps:
-- name: docker
-  image: plugins/docker
-  settings:
-    repo: ensaas/k8s-routines
-    username: ensaas
-    password:
-      from_secret: docker_password
-    tags:
-      - latest
-      - 0.2.5
-# - name: deploy
-#   image: ensaas/
+# - name: docker
+#   image: plugins/docker
+#   settings:
+#     repo: ensaas/k8s-routines
+#     username: ensaas
+#     password:
+#       from_secret: docker_password
+#     tags:
+#       - latest
+#       - 0.2.5
+- name: deploy
+  image: ensaas/k8s-routines
+  commands:
+  - kubectl apply -f k8s/
