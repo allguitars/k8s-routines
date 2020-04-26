@@ -18,7 +18,9 @@ steps:
   - sed 's/certificate-authority/certificate-authority-data/g' config | sed 's/client-certificate/client-certificate-data/g' | sed 's/client-key/client-key-data/g' > config
   # - pwd # /drone/src
   - ls -l
-  - cat /drone/src/config
+  # - cat /drone/src/config
+  - echo hello >> test.log
+  - cat test.log
   # - kubectl get all --kubeconfig=config
   environment:
     SERVER:
