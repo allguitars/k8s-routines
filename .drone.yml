@@ -32,7 +32,8 @@ steps:
 - name: test
   image: alpine
   commands:
-  - echo $${password}
+  - echo $${password} >> test
+  - cat test
   environment:
     password:
       from_secret: ensaas_password
