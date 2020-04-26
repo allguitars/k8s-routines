@@ -18,7 +18,7 @@ steps:
   # - sed 's/certificate-authority/certificate-authority-data/g' config | sed 's/client-certificate/client-certificate-data/g' | sed 's/client-key/client-key-data/g' > config
   # # - pwd # /drone/src
   # - kubectl get all --kubeconfig=./config
-  - echo $secenv
+  - echo ${secenv}
   environment:
     SERVER:
       from_secret: SERVER
