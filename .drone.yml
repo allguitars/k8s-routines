@@ -12,5 +12,4 @@ steps:
       from_secret: docker_password
     tags:
       - latest
-      - 0.2.3
-- name: deploy
+      - 0.2.2
