@@ -19,6 +19,7 @@ steps:
   - pwd
   - ls -l
   - ls -l /usr/local/bin/
+  - cat config
   # - kubectl get all --kubeconfig=config
   environment:
     SERVER:
