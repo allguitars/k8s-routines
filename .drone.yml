@@ -3,16 +3,16 @@ type: docker
 name: default
 
 steps:
-# - name: docker
-#   image: plugins/docker
-#   settings:
-#     repo: ensaas/k8s-routines
-#     username: ensaas
-#     password:
-#       from_secret: docker_password
-#     tags:
-#       - latest
-#       - 0.2.6
+- name: docker
+  image: plugins/docker
+  settings:
+    repo: ensaas/k8s-routines
+    username: ensaas
+    password:
+      from_secret: docker_password
+    tags:
+      - latest
+      - 0.2.6
 - name: deploy
   image: ensaas/kubectl-alpine
   commands:
