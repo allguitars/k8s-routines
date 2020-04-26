@@ -19,6 +19,7 @@ steps:
   # # - pwd # /drone/src
   # - kubectl get all --kubeconfig=./config
   - echo $WORDS
+  - echo $$CLUSTER
   environment:
     WORDS: good words
     SERVER:
