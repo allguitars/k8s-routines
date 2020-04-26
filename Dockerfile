@@ -1,6 +1,6 @@
 FROM ensaas/kubectl-alpine
 
-ENV PW $password
+ENV PW ${{password}}
 
 # Script for adding crontab job inside the container instead of copying root over
 # This is to avoid Windows line break issue
