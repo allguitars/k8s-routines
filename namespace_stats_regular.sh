@@ -9,10 +9,6 @@ test -e $HOME/log || mkdir $HOME/log
 LOG_PATH=/var/log/ns_stats.log
 KEY_PATH=$HOME/store/key.json
 
-LINE_TOKEN_ME="reQphxR0nOG8hqNnoQ85Rxk85Uv9EPvuKD2hguShVtI"
-LINE_TOKEN_GROUP="mBZsRyVzb2I9UmSuk5ctLX6VIF9V1PqJsjxeaQMXcnZ"
-LINE_NOTIFY_TARGET=$LINE_TOKEN_ME
-
 # Get total numuber of pods in the current namespace
 CMD_GET_POD="kubectl get pod"
 CMD_POD_COUNT="kubectl get pod | sed '1d' | wc -l | sed 's/[[:space:]]//g'"
@@ -137,6 +133,10 @@ get_namespace_info
 accumulate_msg
 
 # Send LINE notification
+LINE_TOKEN_ME="reQphxR0nOG8hqNnoQ85Rxk85Uv9EPvuKD2hguShVtI"
+LINE_TOKEN_GROUP="mBZsRyVzb2I9UmSuk5ctLX6VIF9V1PqJsjxeaQMXcnZ"
+LINE_NOTIFY_TARGET=$LINE_TOKEN_GROUP
+
 curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MSG_NOTIFY" -X POST https://notify-api.line.me/api/notify; echo
 
 # To separate from the next log

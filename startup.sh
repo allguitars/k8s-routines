@@ -10,6 +10,6 @@ crontab -l
 ME="reQphxR0nOG8hqNnoQ85Rxk85Uv9EPvuKD2hguShVtI"
 GROUP="mBZsRyVzb2I9UmSuk5ctLX6VIF9V1PqJsjxeaQMXcnZ"
 
-TARGET=$ME
+TARGET=$GROUP
 MSG="%0D%0AThe k8s-routines container has started."
 curl -H "Authorization: Bearer $TARGET" -d "message=$MSG" -X POST https://notify-api.line.me/api/notify; echo
