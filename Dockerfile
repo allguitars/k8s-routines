@@ -1,20 +1,26 @@
-FROM ensaas/kubectl-alpine
+FROM alpine
 
-# Create the config for accessing EnSaaS resources
+# Install curl
+RUN set -ex; apk add curl
+
+# Install kubectl
+RUN set -ex; \
+  curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl; \
+  chmod +x ./kubectl; \
+  mv ./kubectl /usr/local/bin/kubectl; \
+  kubectl version --client
+
+# Handling kubeconfig
 ARG CONFIG
-RUN echo "$CONFIG" >> /config
+RUN set -ex; \
+  mkdir /root/.kube; \
+  echo "$CONFIG" >> /root/.kube/config
+ENV KUBECONFIG /root/.kube/config
 
 # Script for adding crontab job inside the container instead of copying root over
 # This is to avoid Windows line break issue
 COPY ./startup.sh /usr/local/startup.sh
 RUN set -ex; chmod 0744 /usr/local/startup.sh
-
-# min folder
-# WORKDIR /etc/periodic/min
-# min scripts
-# COPY ./namespace_stats_regular.sh ./
-# Set permission
-# RUN set -ex; chmod 0744 *
 
 # 6-hour folder
 WORKDIR /etc/periodic/6hr
