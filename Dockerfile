@@ -2,7 +2,7 @@ FROM ensaas/kubectl-alpine
 
 # Create the config for accessing EnSaaS resources
 ARG CONFIG
-RUN echo $CONFIG >> /config
+RUN echo "$CONFIG" >> /config
 
 # Script for adding crontab job inside the container instead of copying root over
 # This is to avoid Windows line break issue
