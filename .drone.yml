@@ -8,6 +8,10 @@ steps:
   environment:
     CONFIG:
       from_secret: ensaas_config
+    ENSAAS_USER:
+      from_secret: ensaas_username
+    ENSAAS_PASSWORD:
+      from_secret: ensaas_password
   settings:
     repo: ensaas/k8s-routines
     username: ensaas
@@ -18,9 +22,11 @@ steps:
       - 0.3.0
     build_args_from_env:
       - CONFIG
+      - ENSAAS_USER
+      - ENSAAS_PASSWORD
 
 # - name: deploy
-#   image: ensaas/kubectl-alpine
+#   image: ensaas/k8s-routines
 #   commands:
 #   - kubectl config use-context $CURRENT_CONTEXT
 #   - kubectl config set-context --current --namespace=$NAMESPACE
@@ -29,7 +35,3 @@ steps:
 #   environment:
 #     CURRENT_CONTEXT: 6e0745d0-5c25-11ea-b898-fa99721571bc-eks004
 #     NAMESPACE: devspace
-#     username:
-#       from_secret: ensaas_username
-#     password:
-#       from_secret: ensaas_password

@@ -17,6 +17,12 @@ RUN set -ex; \
   echo "$CONFIG" >> /root/.kube/config
 ENV KUBECONFIG /root/.kube/config
 
+# EnSaaS login crendentials
+ARG ENSAAS_USER
+ARG ENSAAS_PASSWORD
+ENV ENSAAS_USER $ENSAAS_USER
+ENV ENSAAS_PASSWORD $ENSAAS_PASSWORD
+
 # Script for adding crontab job inside the container instead of copying root over
 # This is to avoid Windows line break issue
 COPY ./startup.sh /usr/local/startup.sh
