@@ -6,8 +6,8 @@ steps:
 - name: docker
   image: plugins/docker
   environment:
-    TOKEN:
-      from_secret: ensaas_password
+    CONFIG:
+      from_secret: ensaas_config
   settings:
     repo: ensaas/k8s-routines
     username: ensaas
@@ -17,7 +17,7 @@ steps:
       - latest
       - 0.3.0
     build_args_from_env:
-      - TOKEN
+      - CONFIG
 
 # - name: deploy
 #   image: ensaas/kubectl-alpine
