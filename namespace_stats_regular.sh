@@ -67,7 +67,8 @@ get_namespace_info() {
     API_NS_INFO="$MP_BASE_URL/v1/datacenter/$DATA_CENTER/cluster/$CLUSTER/namespace/$NAMESPACE/info"
 
     # Get accessToken for calling the API
-    TOKEN=$(curl -X POST $API_AUTH -H "Content-Type: application/json" -d @$KEY_PATH | jq '.accessToken' | tr -d '\"')
+    # TOKEN=$(curl -X POST $API_AUTH -H "Content-Type: application/json" -d @$KEY_PATH | jq '.accessToken' | tr -d '\"')
+    TOKEN=$(curl -X POST $API_AUTH -d "username=$ENSAAS_USER&password=$ENSAAS_PASSWORD" | jq '.accessToken' | tr -d '\"')
 
     # Get namespace information
     NS_INFO=$(curl $API_NS_INFO -H "Authorization: Bearer $TOKEN")
@@ -83,14 +84,14 @@ get_namespace_info() {
     limitCpuRate=`echo "scale=2; $limitCPU / $totalCPU" | bc -l`
     requestCpuRate=`echo "scale=2; $requestCPU / $totalCPU" | bc -l`
 
-    limitMemory=$(echo $NS_INFO | jq '.limitMemory' | tr -d '\"' | tr -d '.00')
-    requestMemory=$(echo $NS_INFO | jq '.requestMemory' | tr -d '\"' | tr -d '.00')
+    limitMemory=$(echo $NS_INFO | jq '.limitMemory' | tr -d '\"' | cut -d '.' -f1)
+    requestMemory=$(echo $NS_INFO | jq '.requestMemory' | tr -d '\"' | cut -d '.' -f1)
     totalMemory=$(echo $NS_INFO | jq '.totalMemory' | tr -d '\"')
 
     limitMemoryRate=`echo "scale=2; $limitMemory / $totalMemory" | bc -l`
     requestMemoryRate=`echo "scale=2; $requestMemory / $totalMemory" | bc -l`
 
-    usedPod=$(echo $NS_INFO | jq '.usedPod' | tr -d '\"' | tr -d '.00')
+    usedPod=$(echo $NS_INFO | jq '.usedPod' | tr -d '\"' | cut -d '.' -f1)
     totalPod=$(echo $NS_INFO | jq '.totalPod' | tr -d '\"')
 
     MSG="%0D%0A\
@@ -107,16 +108,13 @@ accumulate_msg() {
     MSG_NOTIFY="$MSG_NOTIFY$MSG%0D%0A"
 }
 
+# ---- sa-eks004-level1 ----
 # Function: get statistics for namespac
 get_namespace_info
 # Function: accumulate messages
 accumulate_msg
 
 # ---- sa-eks004-level2 ----
-# MP_BASE_URL="https://portal-mp-ensaas.sa.wise-paas.com"
-# SSO_BASE_URL="https://api-sso-ensaas.sa.wise-paas.com"
-# DATA_CENTER="sa"
-# CLUSTER="eks004"
 NAMESPACE="level2"
 # do
 get_namespace_info
@@ -135,7 +133,7 @@ accumulate_msg
 # Send LINE notification
 LINE_TOKEN_ME="reQphxR0nOG8hqNnoQ85Rxk85Uv9EPvuKD2hguShVtI"
 LINE_TOKEN_GROUP="mBZsRyVzb2I9UmSuk5ctLX6VIF9V1PqJsjxeaQMXcnZ"
-LINE_NOTIFY_TARGET=$LINE_TOKEN_GROUP
+LINE_NOTIFY_TARGET=$LINE_TOKEN_ME
 
 curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MSG_NOTIFY" -X POST https://notify-api.line.me/api/notify; echo
 
