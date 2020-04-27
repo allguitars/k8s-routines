@@ -40,9 +40,5 @@ RUN set -ex; \
   apk add jq; \
   apk add bc
 
-# Key for creating a token
-WORKDIR /root/store
-COPY ./key.json ./
-
 CMD ["sh", "-c", "/usr/local/startup.sh && crond -f"]
 # CMD ["crond", "-f"]
