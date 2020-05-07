@@ -35,10 +35,15 @@ COPY ./namespace_stats_regular.sh ./
 # Set permission
 RUN set -ex; chmod 0744 *
 
-# Install tools (curl already installed in ensaas/kubectl-alpine)
 RUN set -ex; \
   apk add jq; \
   apk add bc
+
+# Set system timezone
+RUN set -ex; apk add tzdata && \
+  cp /usr/share/zoneinfo/Asia/Taipei /etc/localtime && \
+  echo "Asia/Taipei" > /etc/timesone && \
+  date
 
 CMD ["sh", "-c", "/usr/local/startup.sh && crond -f"]
 # CMD ["crond", "-f"]
