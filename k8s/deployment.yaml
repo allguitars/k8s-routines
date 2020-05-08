@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: routines
-          image: ensaas/k8s-routines:0.6.0
+          image: ensaas/k8s-routines:0.7.0
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
