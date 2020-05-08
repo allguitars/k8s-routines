@@ -29,8 +29,10 @@ sleep 5
 deploy_after=$(eval $cmd_count_deploy)
 pod_after=$(eval $cmd_count_pod)
 
-((deploy_diff = deploy_before - deploy_after))
-((pod_diff = pod_before - pod_after))
+deploy_diff=0
+pod_diff=0
+((deploy_diff = $deploy_before - $deploy_after))
+((pod_diff = $pod_before - $pod_after))
 
 # LINE Notification
 MSG="%0D%0A\
