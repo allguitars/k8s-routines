@@ -1,44 +1,85 @@
 #!/bin/sh
 
-cmd_count_deploy="kubectl get deploy | sed '1d' | wc -l | sed 's/[[:space:]]//g'"
-cmd_count_pod="kubectl get pod | sed '1d' | wc -l | sed 's/[[:space:]]//g'"
-
-# Count the quantity of current objects before cleaning
-deploy_before=$(eval $cmd_count_deploy)
-pod_before=$(eval $cmd_count_pod)
+CMD_COUNT_DEPLOY="kubectl get deploy | sed '1d' | wc -l | sed 's/[[:space:]]//g'"
+CMD_COUNT_POD="kubectl get pod | sed '1d' | wc -l | sed 's/[[:space:]]//g'"
 
 # Cleaning
-export result=$(kubectl get deploy | grep 0/ | awk '{print $1}')
-kubectl delete deploy $(echo "$result")
-sleep 1
-kubectl delete svc $(echo "$result")
-sleep 1
-kubectl delete ing $(echo "$result")
-sleep 1
-kubectl delete pod $(echo "$result")
-sleep 1
-kubectl delete rs $(echo "$result")
-sleep 1
-kubectl get deploy | grep 0/ | awk '{print $1}'
-sleep 1
-kubectl delete deploy $(kubectl get pod | grep -v Running | sed '1d' | cut -d'-' -f1,2,3)
+cleanup () {
+    # Count the quantity of current objects before cleaning
+    DEPLOY_BEFORE=$(eval $CMD_COUNT_DEPLOY)
+    POD_BEFORE=$(eval $CMD_COUNT_POD)
 
-sleep 5
+    export RESULT=$(kubectl get deploy | grep 0/ | awk '{print $1}')
+    kubectl delete deploy $(echo "$RESULT")
+    sleep 1
+    kubectl delete svc $(echo "$RESULT")
+    sleep 1
+    kubectl delete ing $(echo "$RESULT")
+    sleep 1
+    kubectl delete pod $(echo "$RESULT")
+    sleep 1
+    kubectl delete rs $(echo "$RESULT")
+    sleep 1
+    kubectl get deploy | grep 0/ | awk '{print $1}'
+    sleep 1
+    kubectl delete deploy $(kubectl get pod | grep -v Running | sed '1d' | cut -d'-' -f1,2,3)
 
-# Count again after cleaning
-deploy_after=$(eval $cmd_count_deploy)
-pod_after=$(eval $cmd_count_pod)
+    sleep 5
 
-deploy_diff=0
-pod_diff=0
-((deploy_diff = $deploy_before - $deploy_after))
-((pod_diff = $pod_before - $pod_after))
+    # Count again after cleaning
+    DEPLOY_AFTER=$(eval $CMD_COUNT_DEPLOY)
+    POD_AFTER=$(eval $CMD_COUNT_POD)
+
+    DEPLOY_DIFF=$((DEPLOY_BEFORE - DEPLOY_AFTER))
+    POD_DIFF=$((POD_BEFORE - POD_AFTER))
+
+    MESSAGE="\
+    - deployments removed: $DEPLOY_DIFF%0D%0A\
+    - pods removed: $POD_DIFF\
+    "
+
+    append_message
+}
+
+switch_context_ns () {
+    kubectl config use-context $CONTEXT
+    kubectl config set-context --current --namespace=$NAMESPACE
+}
+
+append_message () {
+    MESSAGE_NOTIFY="$MESSAGE_NOTIFY%0D%0A$MESSAGE"
+}
+
+# Initial message
+MESSAGE_NOTIFY="%0D%0AJust finished checking if any bad pods."
+
+# ------ sa-eks004-level2 ------
+DATA_CENTER="sa"
+CLUSTER="eks004"
+NAMESPACE="level2"
+CONTEXT="6e0745d0-5c25-11ea-b898-fa99721571bc-eks004"
+
+# Adding title
+MESSAGE="[$DATA_CENTER-$CLUSTER-$NAMESPACE]"
+append_message
+
+# Do the cleanup
+switch_context_ns
+cleanup
+
+# ------ hz-eks006-level2 ------
+DATA_CENTER="hz"
+CLUSTER="eks006"
+NAMESPACE="level2"
+CONTEXT="24c3c1e0-8094-11ea-a8cd-d6940539dde2-eks006"
+
+# Adding title
+MESSAGE="[$DATA_CENTER-$CLUSTER-$NAMESPACE]"
+append_message
+
+# Do the cleanup
+switch_context_ns
+cleanup
 
 # LINE Notification
-MSG="%0D%0A\
-Just done checking if there are any bad deployments.%0D%0A\
-deployments removed: $deploy_diff%0D%0A\
-pods removed: $pod_diff\
-"
-
-curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MSG" -X POST https://notify-api.line.me/api/notify; echo
+curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MESSAGE_NOTIFY" -X POST https://notify-api.line.me/api/notify; echo
