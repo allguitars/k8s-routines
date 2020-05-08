@@ -9,7 +9,7 @@ echo -e "0       8       *       *       *       run-parts /etc/periodic/quote\n
 crontab -l
 
 # Greeting
-MSG="%0D%0AThe k8s-routines container has started."
+MSG="%0D%0A\"k8s-routines\" container has started."
 curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MSG" -X POST https://notify-api.line.me/api/notify; echo
 
 

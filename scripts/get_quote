@@ -1,16 +1,16 @@
 #!/bin/sh
 
-RESPONSE=$(curl -X POST https://andruxnet-random-famous-quotes.p.rapidapi.com/ \
-                -d "cat=famous&count=1" \
-                -H "x-rapidapi-host: andruxnet-random-famous-quotes.p.rapidapi.com" \
-                -H "x-rapidapi-key: 33c9529002msh67b66ec4cf40d06p1ac0b7jsn0bd10bb27d8e")
+RESPONSE=$(curl -X POST http://api.forismatic.com/api/1.0/ \
+                -d "method=getQuote&key=123&format=json&lang=en")
 
-QUOTE=$(echo $RESPONSE | jq .[0].quote)
-AUTHOR=$(echo $RESPONSE | jq .[0].author | tr -d '\"')
+QUOTE=$(echo $RESPONSE | jq .quoteText)
+AUTHOR=$(echo $RESPONSE | jq .quoteAuthor | tr -d '\"')
 
 MESSAGE="%0D%0A\
 $QUOTE%0D%0A%0D%0A\
 - $AUTHOR"
 
+echo $MESSAGE
+
 # Sending LINE Notify
-curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MESSAGE" -X POST https://notify-api.line.me/api/notify; echo
+# curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MESSAGE" -X POST https://notify-api.line.me/api/notify; echo
