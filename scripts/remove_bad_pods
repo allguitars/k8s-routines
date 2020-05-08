@@ -1,0 +1,42 @@
+#!/bin/sh
+
+cmd_count_deploy="kubectl get deploy | sed '1d' | wc -l | sed 's/[[:space:]]//g'"
+cmd_count_pod="kubectl get pod | sed '1d' | wc -l | sed 's/[[:space:]]//g'"
+
+# Count the quantity of current objects before cleaning
+deploy_before=$(eval $cmd_count_deploy)
+pod_before=$(eval $cmd_count_pod)
+
+# Cleaning
+export result=$(kubectl get deploy | grep 0/ | awk '{print $1}')
+kubectl delete deploy $(echo "$result")
+sleep 1
+kubectl delete svc $(echo "$result")
+sleep 1
+kubectl delete ing $(echo "$result")
+sleep 1
+kubectl delete pod $(echo "$result")
+sleep 1
+kubectl delete rs $(echo "$result")
+sleep 1
+kubectl get deploy | grep 0/ | awk '{print $1}'
+sleep 1
+kubectl delete deploy $(kubectl get pod | grep -v Running | sed '1d' | cut -d'-' -f1,2,3)
+
+sleep 5
+
+# Count again after cleaning
+deploy_after=$(eval $cmd_count_deploy)
+pod_after=$(eval $cmd_count_pod)
+
+((deploy_diff = deploy_before - deploy_after))
+((pod_diff = pod_before - pod_after))
+
+# LINE Notification
+MSG="%0D%0A\
+Just done checking if there are any bad deployments.%0D%0A\
+deployments removed: $deploy_diff%0D%0A\
+pods removed: $pod_diff\
+"
+
+curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MSG" -X POST https://notify-api.line.me/api/notify; echo

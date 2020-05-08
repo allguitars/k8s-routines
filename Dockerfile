@@ -1,5 +1,9 @@
 FROM alpine
 
+ENV LINE_TOKEN_ME reQphxR0nOG8hqNnoQ85Rxk85Uv9EPvuKD2hguShVtI
+ENV LINE_TOKEN_GROUP mBZsRyVzb2I9UmSuk5ctLX6VIF9V1PqJsjxeaQMXcnZ
+ENV LINE_NOTIFY_TARGET $LINE_TOKEN_ME
+
 # Install curl
 RUN set -ex; apk add curl
 
@@ -36,6 +40,16 @@ RUN set -ex; chmod 0744 *
 ## ------ hourly routines ------
 WORKDIR /etc/periodic/hourly
 COPY ./scripts/hourly_check ./
+RUN set -ex; chmod 0744 *
+
+## ----- midnight cleanup ------
+WORKDIR /etc/periodic/midnight
+COPY ./scripts/remove_bad_pods ./
+RUN set -ex; chmod 0744 *
+
+## ----- Quote of the day ------
+WORKDIR /etc/periodic/quote
+COPY ./scripts/get_quote ./
 RUN set -ex; chmod 0744 *
 
 RUN set -ex; \
