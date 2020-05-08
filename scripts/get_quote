@@ -10,7 +10,5 @@ MESSAGE="%0D%0A\
 $QUOTE%0D%0A%0D%0A\
 - $AUTHOR"
 
-echo $MESSAGE
-
 # Sending LINE Notify
-# curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MESSAGE" -X POST https://notify-api.line.me/api/notify; echo
+curl -H "Authorization: Bearer $LINE_NOTIFY_TARGET" -d "message=$MESSAGE" -X POST https://notify-api.line.me/api/notify; echo
