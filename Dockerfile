@@ -28,11 +28,14 @@ ENV ENSAAS_PASSWORD $ENSAAS_PASSWORD
 COPY ./startup.sh /usr/local/startup.sh
 RUN set -ex; chmod 0744 /usr/local/startup.sh
 
-# 6-hour folder
+## ------ 6-hourly routines ------
 WORKDIR /etc/periodic/6hr
-# 6-hour scripts
 COPY ./namespace_stats_regular.sh ./
-# Set permission
+RUN set -ex; chmod 0744 *
+
+## ------ hourly routines ------
+WORKDIR /etc/periodic/15min
+COPY ./hourly_check.sh ./
 RUN set -ex; chmod 0744 *
 
 RUN set -ex; \
@@ -42,8 +45,7 @@ RUN set -ex; \
 # Set system timezone
 RUN set -ex; apk add tzdata && \
   cp /usr/share/zoneinfo/Asia/Taipei /etc/localtime && \
-  echo "Asia/Taipei" > /etc/timesone && \
-  date
+  echo "Asia/Taipei" > /etc/timesone
 
 CMD ["sh", "-c", "/usr/local/startup.sh && crond -f"]
 # CMD ["crond", "-f"]
