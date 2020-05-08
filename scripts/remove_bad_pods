@@ -10,20 +10,13 @@ cleanup () {
     POD_BEFORE=$(eval $CMD_COUNT_POD)
 
     export RESULT=$(kubectl get deploy | grep 0/ | awk '{print $1}')
-    kubectl delete deploy $(echo "$RESULT")
-    sleep 1
-    kubectl delete svc $(echo "$RESULT")
-    sleep 1
-    kubectl delete ing $(echo "$RESULT")
-    sleep 1
-    kubectl delete pod $(echo "$RESULT")
-    sleep 1
-    kubectl delete rs $(echo "$RESULT")
-    sleep 1
-    kubectl get deploy | grep 0/ | awk '{print $1}'
-    sleep 1
+    kubectl delete deploy $(echo "$RESULT"); sleep 1
+    kubectl delete svc $(echo "$RESULT"); sleep 1
+    kubectl delete ing $(echo "$RESULT"); sleep 1
+    kubectl delete pod $(echo "$RESULT"); sleep 1
+    kubectl delete rs $(echo "$RESULT"); sleep 1
+    kubectl get deploy | grep 0/ | awk '{print $1}'; sleep 1
     kubectl delete deploy $(kubectl get pod | grep -v Running | sed '1d' | cut -d'-' -f1,2,3)
-
     sleep 5
 
     # Count again after cleaning
