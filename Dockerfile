@@ -25,17 +25,17 @@ ENV ENSAAS_PASSWORD $ENSAAS_PASSWORD
 
 # Script for adding crontab job inside the container instead of copying root over
 # This is to avoid Windows line break issue
-COPY ./startup.sh /usr/local/startup.sh
+COPY ./scripts/startup.sh /usr/local/startup.sh
 RUN set -ex; chmod 0744 /usr/local/startup.sh
 
 ## ------ 6-hourly routines ------
 WORKDIR /etc/periodic/6hr
-COPY ./namespace_stats_regular.sh ./
+COPY ./scripts/namespace_stats_regular ./
 RUN set -ex; chmod 0744 *
 
 ## ------ hourly routines ------
-WORKDIR /etc/periodic/15min
-COPY ./hourly_check.sh ./
+WORKDIR /etc/periodic/hourly
+COPY ./scripts/hourly_check ./
 RUN set -ex; chmod 0744 *
 
 RUN set -ex; \

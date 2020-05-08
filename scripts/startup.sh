@@ -3,7 +3,7 @@
 echo "Running startup.sh.."
 
 # Crontab
-echo -e "0       */6     *       *       *       /etc/periodic/6hr/namespace_stats_regular.sh\n" >> /etc/crontabs/root
+echo -e "0       */6     *       *       *       run-parts /etc/periodic/6hr\n" >> /etc/crontabs/root
 crontab -l
 
 # Greeting
@@ -24,4 +24,4 @@ curl -H "Authorization: Bearer $TARGET" -d "message=$MSG" -X POST https://notify
 # 0       3       *       *       6       run-parts /etc/periodic/weekly
 # 0       5       1       *       *       run-parts /etc/periodic/monthly
 
-# 0       */6     *       *       *       /etc/periodic/6hr/namespace_stats_regular.sh
+# 0       */6     *       *       *       run-parts /etc/periodic/6hr
