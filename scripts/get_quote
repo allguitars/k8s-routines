@@ -1,7 +1,6 @@
 #!/bin/sh
 
-RESPONSE=$(curl -X POST http://api.forismatic.com/api/1.0/ \
-                -d "method=getQuote&key=123&format=json&lang=en")
+RESPONSE=$(curl -X POST http://api.forismatic.com/api/1.0/ -d "method=getQuote&key=123&format=json&lang=en")
 
 QUOTE=$(echo $RESPONSE | jq .quoteText)
 AUTHOR=$(echo $RESPONSE | jq .quoteAuthor | tr -d '\"')
